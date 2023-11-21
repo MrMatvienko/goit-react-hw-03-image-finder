@@ -1,10 +1,18 @@
-export const ImageGalleryItem = ({ image, onImageClick }) => {
-  const handleClick = () => {
+import { Component } from 'react';
+
+export class ImageGalleryItem extends Component {
+  handleClick = () => {
+    const { onImageClick, image } = this.props;
     onImageClick(image);
   };
-  return (
-    <li className="gallery-item" onClick={handleClick}>
-      <img src={image.webformatURL} alt="" />
-    </li>
-  );
-};
+
+  render() {
+    const { image } = this.props;
+
+    return (
+      <li className="gallery-item" onClick={this.handleClick}>
+        <img src={image.webformatURL} alt="img" />
+      </li>
+    );
+  }
+}
