@@ -1,16 +1,15 @@
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
+import { List, ListContainer } from './ImageGallery.styles';
 
-export const ImageGallery = ({ images, onImageClick }) => {
-  console.log(images);
+export const ImageGallery = ({ images }) => {
   return (
-    <ul className="gallery">
-      {images.map(image => (
-        <ImageGalleryItem
-          key={image.id}
-          image={image}
-          onImageClick={onImageClick}
-        />
-      ))}
-    </ul>
+    <ListContainer>
+      <List className="gallery">
+        {images &&
+          images.map((image, id) => (
+            <ImageGalleryItem key={id} image={image} />
+          ))}
+      </List>
+    </ListContainer>
   );
 };

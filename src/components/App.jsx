@@ -1,57 +1,76 @@
 import { Component } from 'react';
 import { Searchbar } from './Searchbar/Searchbar';
-import { ImageGallery } from './ImageGallery/ImageGallery';
 import { getImages } from 'API/api';
+import { ImageGallery } from './ImageGallery/ImageGallery';
+import { LoadMoreButton } from './Button/Button';
+import Notiflix from 'notiflix';
+import { Loader } from './Loader/Loader';
 
 export class App extends Component {
   state = {
-    images: [],
-    isLoading: false,
     query: '',
-    selectedImage: null,
+    images: null,
+    isLoading: false,
+    error: null,
     page: 1,
+    isButtonShow: false,
   };
 
   componentDidUpdate(_, prevState) {
     const { query, page } = this.state;
     if (query !== prevState.query || page !== prevState.page) {
-      this.fetchImages();
+      if (query !== '') {
+        this.fetchImages(query, page);
+      }
     }
   }
 
-  fetchImages = async () => {
-    const { query, page } = this.state;
-    this.setState({ isLoading: true });
+  fetchImages = async (query, page) => {
     try {
+      this.setState({ isLoading: true });
       const data = await getImages(query, page);
-      this.setState(prevState => ({
-        images: [...prevState.images, ...data.hits],
-        isLoading: false,
-      }));
+
+      if (!data.totalHits || !query) {
+        this.setState({
+          isButtonShow: false,
+          error: true,
+          isLoading: false,
+        });
+        Notiflix.Notify.failure(
+          'Sorry, there are no images matching your search query. Please try again.'
+        );
+      } else {
+        this.setState(prevState => ({
+          images: page === 1 ? data.hits : [...prevState.images, ...data.hits],
+          isButtonShow: true,
+          isLoading: false,
+        }));
+      }
     } catch (error) {
-      console.error('Error fetching images:', error);
-      this.setState({ isLoading: false });
+      this.setState({ error: error.message, isLoading: false });
     }
   };
 
-  handleSearch = ({ query }) => {
-    this.setState({ query: query, page: 1, images: [] });
+  handleSubmit = query => {
+    this.setState({ query }, () => {
+      this.fetchImages(query, this.state.page);
+    });
   };
-  openModal = image => {
-    this.setState({ selectedImage: image });
-  };
-
-  closeModal = () => {
-    this.setState({ selectedImage: null });
+  onLoadMore = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+      isLoading: true,
+    }));
   };
   render() {
-    const { images } = this.state;
+    const { images, isButtonShow, isLoading } = this.state;
     return (
       <>
-        <Searchbar onSubmit={this.handleSearch} />
-        {images && (
-          <ImageGallery images={images} onImageClick={this.openModal} />
-        )}
+        <Searchbar handleSearch={this.handleSubmit} />
+        <ImageGallery images={images} />
+        {/* <Modal /> */}
+        {isButtonShow && <LoadMoreButton onClick={this.onLoadMore} />}
+        {isLoading && <Loader />}
       </>
     );
   }

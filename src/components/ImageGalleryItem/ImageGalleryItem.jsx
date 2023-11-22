@@ -1,18 +1,27 @@
+import { Item } from './ImageGalleryItem.styled';
 import { Component } from 'react';
 
 export class ImageGalleryItem extends Component {
-  handleClick = () => {
-    const { onImageClick, image } = this.props;
-    onImageClick(image);
+  openModal = () => {
+    const { largeImageURL } = this.props.image;
+    // Тут викликаємо функцію для відкриття модального вікна, передаючи URL великого зображення
+    this.props.openModal(largeImageURL);
   };
 
   render() {
-    const { image } = this.props;
+    const { webformatURL, tags } = this.props.image;
 
     return (
-      <li className="gallery-item" onClick={this.handleClick}>
-        <img src={image.webformatURL} alt="img" />
-      </li>
+      <Item>
+        <img
+          src={webformatURL}
+          alt={tags}
+          width={300}
+          height={200}
+          className="gallery-item"
+          onClick={this.openModal}
+        />
+      </Item>
     );
   }
 }
