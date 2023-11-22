@@ -21,6 +21,7 @@ export class App extends Component {
     if (query !== prevState.query || page !== prevState.page) {
       if (query !== '') {
         this.fetchImages(query, page);
+        Notiflix.Notify.success('We found your query');
       }
     }
   }
