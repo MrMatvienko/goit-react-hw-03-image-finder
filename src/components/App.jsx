@@ -68,7 +68,6 @@ export class App extends Component {
       <>
         <Searchbar handleSearch={this.handleSubmit} />
         <ImageGallery images={images} />
-        {/* <Modal /> */}
         {isButtonShow && <LoadMoreButton onClick={this.onLoadMore} />}
         {isLoading && <Loader />}
       </>

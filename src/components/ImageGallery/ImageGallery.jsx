@@ -7,7 +7,7 @@ export const ImageGallery = ({ images }) => {
       <List className="gallery">
         {images &&
           images.map((image, id) => (
-            <ImageGalleryItem key={id} image={image} />
+            <ImageGalleryItem key={id} galleryItem={image} />
           ))}
       </List>
     </ListContainer>

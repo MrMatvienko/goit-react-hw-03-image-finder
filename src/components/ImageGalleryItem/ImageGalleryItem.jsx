@@ -1,27 +1,34 @@
+import { Modal } from 'components/Modal/Modal';
 import { Item } from './ImageGalleryItem.styled';
 import { Component } from 'react';
 
 export class ImageGalleryItem extends Component {
-  openModal = () => {
-    const { largeImageURL } = this.props.image;
-    // Тут викликаємо функцію для відкриття модального вікна, передаючи URL великого зображення
-    this.props.openModal(largeImageURL);
+  state = {
+    isModalOpen: false,
+  };
+
+  toggleModal = () => {
+    this.setState(({ isModalOpen }) => ({ isModalOpen: !isModalOpen }));
   };
 
   render() {
-    const { webformatURL, tags } = this.props.image;
+    const {
+      galleryItem: { webformatURL, largeImageURL, tags },
+    } = this.props;
 
     return (
-      <Item>
-        <img
-          src={webformatURL}
-          alt={tags}
-          width={300}
-          height={200}
-          className="gallery-item"
-          onClick={this.openModal}
-        />
-      </Item>
+      <>
+        <Item className="gallery-item" onClick={this.toggleModal}>
+          <img src={webformatURL} alt={tags} width={300} height={200} />
+        </Item>
+        {this.state.isModalOpen && (
+          <Modal
+            largeImageURL={largeImageURL}
+            alt={tags}
+            onCloseModal={this.toggleModal}
+          />
+        )}
+      </>
     );
   }
 }

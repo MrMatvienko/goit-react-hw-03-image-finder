@@ -9,7 +9,7 @@ export const Overlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(138.13deg, #22343c 25.87%, #1f2e35 100%);
+  background: linear-gradient(138.13deg, #85a1ad 25.87%, #94b2c0 30%);
   z-index: 1200;
 `;
 
@@ -18,4 +18,5 @@ export const ModalContent = styled.div`
   overflow: hidden;
   max-width: calc(100vw - 48px);
   max-height: calc(100vh - 24px);
+  margin: auto;
 `;

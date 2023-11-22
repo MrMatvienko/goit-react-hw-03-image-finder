@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 export const List = styled.ul`
-  margin: auto;
-  max-width: 960px;
+  margin: 0 auto;
+  width: 960px;
   margin-top: 20px;
   display: flex;
   flex-wrap: wrap;
