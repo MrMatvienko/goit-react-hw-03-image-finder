@@ -41,11 +41,15 @@ export class App extends Component {
           'Sorry, there are no images matching your search query. Please try again.'
         );
       } else {
-        this.setState(prevState => ({
-          images: page === 1 ? data.hits : [...prevState.images, ...data.hits],
-          isButtonShow: true,
+        const { images: prevImages } = this.state;
+        const totalImages =
+          page === 1 ? data.hits : [...prevImages, ...data.hits];
+
+        this.setState({
+          images: totalImages,
+          isButtonShow: totalImages.length >= 12,
           isLoading: false,
-        }));
+        });
       }
     } catch (error) {
       this.setState({ error: error.message, isLoading: false });
@@ -53,13 +57,22 @@ export class App extends Component {
   };
 
   handleSubmit = query => {
-    this.setState({ query }, () => {
-      this.fetchImages(query, this.state.page);
-    });
+    this.setState(
+      {
+        query,
+        page: 1,
+        images: null,
+      },
+      () => {
+        this.fetchImages(query, this.state.page);
+      }
+    );
   };
+
   onLoadMore = () => {
     this.setState(prevState => ({
       page: prevState.page + 1,
+      isButtonShow: false,
       isLoading: true,
     }));
   };
